@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matrix Operations - Home</title>
+    <link rel="stylesheet" href="./home.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Welcome to Matrix</h1>
+        <h2>Welcome</h2>
+
+        <form id="operationForm">
+            <label for="category">
+                <h4>Choose Operation:</h4>
+                <br>
+            </label>
+            <select id="category" name="category">
+                <option value="Matrix Addition">Matrix Addition</option>
+                <option value="Matrix Subtraction">Matrix Subtraction</option>
+                <option value="Matrix Multiplication">Matrix Multiplication</option>
+                <option value="Scalar Multiplication">Scalar Multiplication</option>
+                <option value="Transposition">Transposition</option>
+                <option value="Determinant Calculation">Determinant Calculation</option>
+                <option value="Inverse Matrix">Inverse Matrix</option>
+                <option value="Solving Linear Systems">Solving Linear Systems</option>
+                <option value="Finding Eigen values and Eigen vectors">Finding Eigen values and Eigen vectors</option>
+            </select>
+            <br><br>
+
+            <div class="matrix-container">
+                <div class="matrix">
+                    <h2>First Matrix</h2>
+                    <table>
+                        <tr>
+                            <td><input type="number" id="matrix1_1"></td>
+                            <td><input type="number" id="matrix1_2"></td>
+                            <td><input type="number" id="matrix1_3"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="number" id="matrix1_4"></td>
+                            <td><input type="number" id="matrix1_5"></td>
+                            <td><input type="number" id="matrix1_6"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="number" id="matrix1_7"></td>
+                            <td><input type="number" id="matrix1_8"></td>
+                            <td><input type="number" id="matrix1_9"></td>
+                        </tr>
+                    </table>
+                </div>
+
+                <div class="matrix">
+                    <h2>Second Matrix</h2>
+                    <table>
+                        <tr>
+                            <td><input type="number" id="matrix2_1"></td>
+                            <td><input type="number" id="matrix2_2"></td>
+                            <td><input type="number" id="matrix2_3"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="number" id="matrix2_4"></td>
+                            <td><input type="number" id="matrix2_5"></td>
+                            <td><input type="number" id="matrix2_6"></td>
+                        </tr>
+                        <tr>
+                            <td><input type="number" id="matrix2_7"></td>
+                            <td><input type="number" id="matrix2_8"></td>
+                            <td><input type="number" id="matrix2_9"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <button type="button" onclick="calculateResult()">Calculate</button>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function getMatrixValues(matrixId) {
+            const values = [];
+            for (let i = 1; i <= 9; i++) {
+                values.push(parseFloat(document.getElementById(matrixId + '_' + i).value) || 0);
+            }
+            return values;
+        }
+
+        function calculateResult() {
+            const operation = document.getElementById('category').value;
+            const matrix1 = getMatrixValues('matrix1');
+            const matrix2 = getMatrixValues('matrix2');
+            let result = [];
+
+            switch (operation) {
+                case 'Matrix Addition':
+                    result = matrix1.map((val, index) => val + matrix2[index]);
+                    break;
+                case 'Matrix Subtraction':
+                    result = matrix1.map((val, index) => val - matrix2[index]);
+                    break;
+                case 'Matrix Multiplication':
+                    for (let i = 0; i < 3; i++) {
+                        for (let j = 0; j < 3; j++) {
+                            let sum = 0;
+                            for (let k = 0; k < 3; k++) {
+                                sum += matrix1[i * 3 + k] * matrix2[k * 3 + j];
+                            }
+                            result.push(sum);
+                        }
+                    }
+                    break;
+                case 'Scalar Multiplication':
+                    const scalar = parseFloat(prompt('Enter scalar value:'));
+                    result = matrix1.map(val => val * scalar);
+                    break;
+                case 'Transposition':
+                    for (let i = 0; i < 3; i++) {
+                        for (let j = 0; j < 3; j++) {
+                            result.push(matrix1[j * 3 + i]);
+                        }
+                    }
+                    break;
+                case 'Determinant Calculation':
+                    const a = matrix1[0], b = matrix1[1], c = matrix1[2];
+                    const d = matrix1[3], e = matrix1[4], f = matrix1[5];
+                    const g = matrix1[6], h = matrix1[7], i = matrix1[8];
+                    result = [a * (e * i - f * h) - b * (d * i - f * g) + c * (d * h - e * g)];
+                    break;
+                case 'Inverse Matrix':
+                    const det = matrix1[0] * (matrix1[4] * matrix1[8] - matrix1[5] * matrix1[7]) -
+                        matrix1[1] * (matrix1[3] * matrix1[8] - matrix1[5] * matrix1[6]) +
+                        matrix1[2] * (matrix1[3] * matrix1[7] - matrix1[4] * matrix1[6]);
+                    if (det === 0) {
+                        result = ['Matrix is not invertible'];
+                    } else {
+                        const invDet = 1 / det;
+                        result = [
+                            invDet * (matrix1[4] * matrix1[8] - matrix1[5] * matrix1[7]),
+                            invDet * (matrix1[2] * matrix1[7] - matrix1[1] * matrix1[8]),
+                            invDet * (matrix1[1] * matrix1[5] - matrix1[2] * matrix1[4]),
+                            invDet * (matrix1[5] * matrix1[6] - matrix1[3] * matrix1[8]),
+                            invDet * (matrix1[0] * matrix1[8] - matrix1[2] * matrix1[6]),
+                            invDet * (matrix1[2] * matrix1[3] - matrix1[0] * matrix1[5]),
+                            invDet * (matrix1[3] * matrix1[7] - matrix1[4] * matrix1[6]),
+                            invDet * (matrix1[1] * matrix1[6] - matrix1[0] * matrix1[7]),
+                            invDet * (matrix1[0] * matrix1[4] - matrix1[1] * matrix1[3])
+                        ];
+                    }
+                    break;
+                case 'Solving Linear Systems':
+                    // Placeholder for solving linear systems calculation
+                    result = ['Solving linear systems calculation not implemented'];
+                    break;
+                case 'Finding Eigen values and Eigen vectors':
+                    // Placeholder for finding eigen values and eigen vectors calculation
+                    result = ['Finding eigen values and eigen vectors calculation not implemented'];
+                    break;
+                default:
+                    result = ['Invalid operation'];
+            }
+            function solveLinearSystem(matrix, constants) {
+                const n = constants.length;
+                for (let i = 0; i < n; i++) {
+                    let maxEl = Math.abs(matrix[i][i]);
+                    let maxRow = i;
+                    for (let k = i + 1; k < n; k++) {
+                        if (Math.abs(matrix[k][i]) > maxEl) {
+                            maxEl = Math.abs(matrix[k][i]);
+                            maxRow = k;
+                        }
+                    }
+
+                    for (let k = i; k < n; k++) {
+                        let tmp = matrix[maxRow][k];
+                        matrix[maxRow][k] = matrix[i][k];
+                        matrix[i][k] = tmp;
+                    }
+                    let tmp = constants[maxRow];
+                    constants[maxRow] = constants[i];
+                    constants[i] = tmp;
+
+                    for (let k = i + 1; k < n; k++) {
+                        let c = -matrix[k][i] / matrix[i][i];
+                        for (let j = i; j < n; j++) {
+                            if (i === j) {
+                                matrix[k][j] = 0;
+                            } else {
+                                matrix[k][j] += c * matrix[i][j];
+                            }
+                        }
+                        constants[k] += c * constants[i];
+                    }
+                }
+
+                const x = new Array(n).fill(0);
+                for (let i = n - 1; i >= 0; i--) {
+                    x[i] = constants[i] / matrix[i][i];
+                    for (let k = i - 1; k >= 0; k--) {
+                        constants[k] -= matrix[k][i] * x[i];
+                    }
+                }
+                return x;
+            }
+
+            function findEigenValuesAndVectors(matrix) {
+                // This is a complex task and typically requires numerical libraries.
+                // Here we provide a simple placeholder implementation.
+                return ['Finding eigenvalues and eigenvectors calculation not implemented'];
+            }
+
+            if (operation === 'Solving Linear Systems') {
+                const constants = [matrix2[0], matrix2[1], matrix2[2]];
+                const matrix = [
+                    [matrix1[0], matrix1[1], matrix1[2]],
+                    [matrix1[3], matrix1[4], matrix1[5]],
+                    [matrix1[6], matrix1[7], matrix1[8]]
+                ];
+                result = solveLinearSystem(matrix, constants);
+            } else if (operation === 'Finding Eigen values and Eigen vectors') {
+                const matrix = [
+                    [matrix1[0], matrix1[1], matrix1[2]],
+                    [matrix1[3], matrix1[4], matrix1[5]],
+                    [matrix1[6], matrix1[7], matrix1[8]]
+                ];
+                result = findEigenValuesAndVectors(matrix);
+            }
+
+            document.getElementById('result').innerText = 'Result: ' + result.join(', ');
+        }
+    </script>
+</body>
+
+</html>
