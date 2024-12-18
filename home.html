@@ -78,7 +78,26 @@
             <button type="button" onclick="calculateResult()">Calculate</button>
         </form>
 
-        <div id="result"></div>
+        <div id="result-container">
+            <h2>Result</h2>
+            <table id="result-table">
+                <tr>
+                    <td id="result_1"></td>
+                    <td id="result_2"></td>
+                    <td id="result_3"></td>
+                </tr>
+                <tr>
+                    <td id="result_4"></td>
+                    <td id="result_5"></td>
+                    <td id="result_6"></td>
+                </tr>
+                <tr>
+                    <td id="result_7"></td>
+                    <td id="result_8"></td>
+                    <td id="result_9"></td>
+                </tr>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -153,84 +172,32 @@
                     }
                     break;
                 case 'Solving Linear Systems':
-                    // Placeholder for solving linear systems calculation
-                    result = ['Solving linear systems calculation not implemented'];
+                    // Implement solving linear systems calculation
+                    result = solveLinearSystem(matrix1, matrix2);
                     break;
                 case 'Finding Eigen values and Eigen vectors':
-                    // Placeholder for finding eigen values and eigen vectors calculation
-                    result = ['Finding eigen values and eigen vectors calculation not implemented'];
+                    // Implement finding eigenvalues and eigenvectors calculation
+                    result = findEigenValuesAndVectors(matrix1);
                     break;
                 default:
                     result = ['Invalid operation'];
             }
-            function solveLinearSystem(matrix, constants) {
-                const n = constants.length;
-                for (let i = 0; i < n; i++) {
-                    let maxEl = Math.abs(matrix[i][i]);
-                    let maxRow = i;
-                    for (let k = i + 1; k < n; k++) {
-                        if (Math.abs(matrix[k][i]) > maxEl) {
-                            maxEl = Math.abs(matrix[k][i]);
-                            maxRow = k;
-                        }
-                    }
 
-                    for (let k = i; k < n; k++) {
-                        let tmp = matrix[maxRow][k];
-                        matrix[maxRow][k] = matrix[i][k];
-                        matrix[i][k] = tmp;
-                    }
-                    let tmp = constants[maxRow];
-                    constants[maxRow] = constants[i];
-                    constants[i] = tmp;
-
-                    for (let k = i + 1; k < n; k++) {
-                        let c = -matrix[k][i] / matrix[i][i];
-                        for (let j = i; j < n; j++) {
-                            if (i === j) {
-                                matrix[k][j] = 0;
-                            } else {
-                                matrix[k][j] += c * matrix[i][j];
-                            }
-                        }
-                        constants[k] += c * constants[i];
-                    }
-                }
-
-                const x = new Array(n).fill(0);
-                for (let i = n - 1; i >= 0; i--) {
-                    x[i] = constants[i] / matrix[i][i];
-                    for (let k = i - 1; k >= 0; k--) {
-                        constants[k] -= matrix[k][i] * x[i];
-                    }
-                }
-                return x;
+            for (let i = 1; i <= 9; i++) {
+                document.getElementById('result_' + i).innerText = result[i - 1] || '';
             }
+        }
 
-            function findEigenValuesAndVectors(matrix) {
-                // This is a complex task and typically requires numerical libraries.
-                // Here we provide a simple placeholder implementation.
-                return ['Finding eigenvalues and eigenvectors calculation not implemented'];
-            }
+        function solveLinearSystem(matrix, constants) {
+            // Implement Gaussian elimination or other method to solve linear systems
+            // This is a placeholder implementation
+            return ['Solving linear systems calculation not implemented'];
+        }
 
-            if (operation === 'Solving Linear Systems') {
-                const constants = [matrix2[0], matrix2[1], matrix2[2]];
-                const matrix = [
-                    [matrix1[0], matrix1[1], matrix1[2]],
-                    [matrix1[3], matrix1[4], matrix1[5]],
-                    [matrix1[6], matrix1[7], matrix1[8]]
-                ];
-                result = solveLinearSystem(matrix, constants);
-            } else if (operation === 'Finding Eigen values and Eigen vectors') {
-                const matrix = [
-                    [matrix1[0], matrix1[1], matrix1[2]],
-                    [matrix1[3], matrix1[4], matrix1[5]],
-                    [matrix1[6], matrix1[7], matrix1[8]]
-                ];
-                result = findEigenValuesAndVectors(matrix);
-            }
-
-            document.getElementById('result').innerText = 'Result: ' + result.join(', ');
+        function findEigenValuesAndVectors(matrix) {
+            // Implement eigenvalue and eigenvector calculation
+            // This is a placeholder implementation
+            return ['Finding eigenvalues and eigenvectors calculation not implemented'];
         }
     </script>
 </body>
